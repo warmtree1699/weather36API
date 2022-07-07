@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
+<style>
+  img {
+    width: 250px;
+    height: 500px;
+    object-fit: cover;
+  }
+
+  * {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
+  }
+
+
+  .title {
+    text-align: center;
+    padding: 50px 0 30px 0;
+  }
+
+  .d-flex {
+    display: flex;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px;
+  }
+
+  .time-list {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .time-list .city {
+    width: 10%;
+  }
+
+  .time-list li~li {
+    width: 30%;
+    text-align: center;
+  }
+
+
+
+  .main {
+  width: 100%;
+  }
+
+  .main td{
+    padding: 5px 0;
+  }
+
+  .main tr:nth-child(odd){
+    background-color: antiquewhite;
+  }
+
+  .main td~td {
+    width: 30%;
+  }
+
+
+
+
+</style>
+
+<body>
+
+
+  <h1 class="title">全台縣市36小時天氣預報</h1>
+
+
+  <div class="container">
+    <ul class="time-list">
+      <li class="city">城市</li>
+      <li class="timeA"></li>
+      <li class="timeB"></li>
+      <li class="timeC"></li>
+    </ul>
+    <table class="main">
+
+    </table>
+  </div>
+
+
+
+</body>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
+<script>
+  // fetch("https://api.unsplash.com/photos/?client_id=XeMLEo-cG4umamAaRPxahF5CC7nhdSYGtbKlmU1O7Sk")
+  //   .then((res) => {
+  //     const data = res.json();
+  //     return data;
+  //   })
+  //   .then((data) => {
+  //     console.log(data);
+  //     for (let i = 0; i < data.length; i++) {
+  //       let container = document.querySelector(".container");
+  //       let img = document.createElement("img");
+  //       img.setAttribute("src", data[i].urls.small);
+  //       container.append(img);
+  //     }
+  //   });
+
+  // data.records.locations[0].location
+
+  // [0].weatherElement[0].time[0].parameter.parameterName
+
+  // axios寫法 把回傳資料渲染在畫面上 forEach 寫法
+
+
+  axios.get("https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-7560FB28-05C5-4087-88BE-82E152B07077&locationName=&elementName=")
+    .then(function (response) {
+      console.log(response);
+      console.log(response.data.records.location);
+
+      const data = response.data.records.location;
+
+      const timeA = document.querySelector('.timeA');
+      timeA.textContent = response.data.records.location[0].weatherElement[0].time[0].startTime;
+
+
+      const timeB = document.querySelector('.timeB');
+      timeB.textContent = response.data.records.location[0].weatherElement[0].time[1].startTime;
+
+      const timeC = document.querySelector('.timeC');
+      timeC.textContent = response.data.records.location[0].weatherElement[0].time[2].startTime;
+
+
+      //資料渲染
+      function renderData() {
+
+        let str = '';
+
+        data.forEach(function (item, index) {
+          str += `<tr>
+            <td>${item.locationName}</td>
+            <td>
+              ${item.weatherElement[0].time[0].parameter.parameterName}
+              溫度
+           ${item.weatherElement[2].time[0].parameter.parameterName} ~
+           ${item.weatherElement[4].time[0].parameter.parameterName}  ℃
+              </td>
+              <td>
+                ${item.weatherElement[0].time[1].parameter.parameterName}
+              溫度
+           ${item.weatherElement[2].time[1].parameter.parameterName} ~
+           ${item.weatherElement[4].time[1].parameter.parameterName}  ℃
+                </td>
+              <td>
+                ${item.weatherElement[0].time[2].parameter.parameterName}
+              溫度
+           ${item.weatherElement[2].time[2].parameter.parameterName} ~
+           ${item.weatherElement[4].time[2].parameter.parameterName}  ℃
+
+                </td>
+            </tr>`
+
+        })
+
+        const main = document.querySelector(".main")
+        main.innerHTML = str;
+      }
+
+      renderData();
+
+    })
+
+
+
+</script>
+
+<!-- 
+// 今晚6點
+// data.records.location[0].weatherElement[0].time[0].StartTime
+// 明早六點 -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</html>
